@@ -16,11 +16,11 @@ describe('Example site', () => {
 
   it('goes directly to README', () => {
     cy.visit('/README')
-    cy.contains('h2', 'README')
+    cy.contains('h1', 'Workshop')
   })
 
   it('redirects to README/', () => {
     cy.visit('/README/')
-    cy.contains('h2', 'README')
+    cy.contains('h1', 'Workshop')
   })
 })
