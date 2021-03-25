@@ -10,6 +10,7 @@ workflows:
       - cypress/run:
           requires:
               - cypress/install
+              
           start: npm start
           wait-on: 'http://localhost:8080'
           no-workspace: true
@@ -17,4 +18,4 @@ workflows:
           parallel: true
           parallelism: 4
           group: 'Parallel spec'
-          tags: "circleci" 
+          tags: "circleci"
