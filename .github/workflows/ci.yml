@@ -18,6 +18,7 @@ jobs:
           build: npx cypress info
           browser: firefox
           record: true
+          parallel: true
           # yarn: true
           # start: yarn start
           start: npm start
