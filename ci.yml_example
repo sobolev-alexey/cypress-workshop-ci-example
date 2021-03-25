@@ -1,0 +1,45 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  build-and-test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v2
+
+      - name: Cache dependencies 💎
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache
+            ~/.npm
+          # use key string with "v1" for simple cache invalidation
+          # use precise key to avoid cache "snowballing"
+          # https://glebbahmutov.com/blog/do-not-let-cypress-cache-snowball/
+          key: dependencies-v2-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies 📦
+        run: npm ci
+
+      - name: Build the app 🏗
+        run: npm run build
+
+      - name: Start the app 📤
+        run: npm start &
+
+      - name: Run Cypress tests 🧪
+        # run: npm run cy:run
+        run: npx cypress run --record --browser chrome
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+
+      # - name: Upload any screenshots and videos 📼
+      #   uses: actions/upload-artifact@v2
+      #   # make sure to run this step
+      #   # even if the previous step fails
+      #   if: always()
+      #   with:
+      #     name: test-artifacts
+      #     path: |
+      #       cypress/videos
+      #       cypress/screenshots
