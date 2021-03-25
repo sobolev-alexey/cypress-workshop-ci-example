@@ -2,15 +2,22 @@
 command = "npm run build"
 publish = "_site"
 [build.environment]
+  # cache Cypress binary in local "node_modules" folder
+  # so Netlify caches it
+  CYPRESS_CACHE_FOLDER = "./node_modules/CypressBinary"
+  # set TERM variable for terminal output
   TERM = "xterm"
 [[plugins]]
   package = "netlify-plugin-cypress"
   [plugins.inputs]
     record = true
+    group = 'deployed'
   # run Cypress tests before building and deploying
   [plugins.inputs.preBuild]
     enable = true
     # call the same commands as we do locally
     start = 'eleventy --serve'
     wait-on = 'http://localhost:8080'
-    record = true 
+    record = true
+    group = 'before deploy'
+    tag = 'netlify'
