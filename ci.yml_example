@@ -32,6 +32,9 @@ jobs:
         run: npx cypress run --record --browser chrome
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # we do not need to install Cypress itself
+          # as we do not plan to run tests
+          CYPRESS_INSTALL_BINARY: 0
 
       # - name: Upload any screenshots and videos 📼
       #   uses: actions/upload-artifact@v2

@@ -1,7 +1,29 @@
 name: ci
 on: [push]
 jobs:
-  build-and-test:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v2
+
+      - name: Run Cypress tests 🧪
+        uses: cypress-io/github-action@v2
+        with:
+          runTests: false
+          build: npm run build
+        env:
+          # we do not need to install Cypress itself
+          # as we do not plan to run tests
+          CYPRESS_INSTALL_BINARY: 0
+
+      - name: Upload built folder 📤
+        uses: actions/upload-artifact@v2
+        with:
+          name: built
+          path: _site
+
+  all-tests:
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
@@ -12,6 +34,15 @@ jobs:
       - name: Checkout 🛎
         uses: actions/checkout@v2
 
+      - name: Download built folder 📥
+        uses: actions/download-artifact@v2
+        with:
+          name: built
+          path: _site
+
+      - name: Show built folder 👀
+        run: ls -la _site
+
       - name: Run Cypress tests 🧪
         uses: cypress-io/github-action@v2
         with:
@@ -19,7 +50,8 @@ jobs:
           browser: firefox
           record: true
           parallel: true
-          group: All specs
+          group: 'all-tests'
+          tag: 'github-actions'
           # yarn: true
           # start: yarn start
           start: npm start
